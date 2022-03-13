@@ -1,0 +1,303 @@
+# Personal Diary
+
+**Table of Contents**
+
+## 20220202
+- Time: 14:00
+- Group Meeting with Teammate and consualtant
+- Duration: 80 min
+
+
+## 20220203
+- Time: 17:00
+- Group Meeting with Teammate and Customer Interview
+- Duration: 60 min
+
+## 20220204
+- Time: 10:00
+- Duration: 75 min
+- Do some research on tech stack
+- Structure: PHP, VB, Cobol, front back sperate
+- Frontend: React.js, Vue.js
+- Components: Bootstrap, Element UI, Ant Design
+- Backend: C++, Java, Python, Ruby on Rail, Go
+
+## 20220205
+- Time: 11:30
+- Duration: 150min
+- Validate feasibility
+1. Structure, I deciced to use front back sperate. Because this kind of structure can be expand easily. And when we change the backend wont direct affact frontend
+2. We use Vue.js as frontend. Because firstly Vue is faster than React. Then Vue support self define Event, React dont. At last Vue can load component on demand. React can not.
+3. We use Ant design as component. Because it got better table function.
+4. We use Java as backend, due to all of us doing pretty good on Java.
+
+## 20220206
+- Time: 19:00
+- Duration: 60 min
+- Do some research on middleware which is the API Layer
+- Find out we do need a API layer for security and Agile development reason
+
+## 20220207
+1. - Time: 13:00
+   - Duration: 70 min
+   - Team member meeting
+   - Discuss the tech stack and duty
+2. - Time: 20:00
+   - Duration: 15 min
+   - Create Meeting Record
+
+
+## 20220208
+1. - Time: 9:30
+   - Duration: 30 min
+   - Create Project binder
+2. - Time: 10:00
+   - Duration: 60 min
+   - Create Prototype
+3. - Time: 11:00
+   - Duration: 60 min
+   - Draw GUI interface 
+
+## 20220209
+- break day
+
+## 20220210
+1. - Time: 15:00
+   - Duration: 30 min
+   - Meeting wth Consultant
+2. - Time: 15:30
+   - Duration: 10 min
+   - Update Meeting Record
+3. - Time: 19:00
+   - Duration: 120 min
+   - Create Generic GUI interface
+![](https://raw.githubusercontent.com/IN2018-2022-15/Img-Host/main/VC/Panel.png)
+
+## 20220211
+1. - Time: 09:30
+   - Duration: 60 min
+   - Create Home Page
+![](https://raw.githubusercontent.com/IN2018-2022-15/Img-Host/main/Xd/Home%20Page.png)
+2. - Time: 10:30
+   - Duration: 25 min
+   - Create Login box
+![](https://raw.githubusercontent.com/IN2018-2022-15/Img-Host/main/Xd/Home%20Page%20Expand.png)
+3. - Time: 11:00
+   - Duration: 90 min
+   - Create Generic error success and notice box
+![](https://raw.githubusercontent.com/IN2018-2022-15/Img-Host/main/Xd/Error%20Page.png)
+![](https://raw.githubusercontent.com/IN2018-2022-15/Img-Host/main/Xd/Booking%20Confirm.png)
+![](https://raw.githubusercontent.com/IN2018-2022-15/Img-Host/main/Xd/Cancel%20Page.png)
+
+
+## 20220212
+- Time: 15:00
+- Duration: 90 min
+- Create Add stock page
+![](https://raw.githubusercontent.com/IN2018-2022-15/Img-Host/main/Xd/Add%20stock.png)
+
+## 20220213
+- break day
+
+## 20220214
+- Time: 19:00
+- Duration: 80 min
+- Create Add job page
+![](https://raw.githubusercontent.com/IN2018-2022-15/Img-Host/main/Xd/New%20Booking.png)
+
+## 20220215
+1. - Time: 17:30
+   - Duration: 30 Min
+   - Team member meeting
+   - Discuss Use case Diagram
+2. - Time: 18:00
+   - Duration: 10 min
+   - Update Meeting Record
+3. - Time: 18:10
+   - Duration: 30 min
+   - Update the Project Binder 
+
+## 20220216
+- break day
+
+## 20220217
+1. - Time: 15:00
+   - Duration: 45 min
+   - Meeting wth Consultant
+2. - Time: 15:45
+   - Duration: 10 min
+   - Update Meeting Record
+3. - Time: 16:00
+   - Duration: 45 min
+   - Create Modify job page
+![](https://raw.githubusercontent.com/IN2018-2022-15/Img-Host/main/Xd/Modify%20Booking.png)
+
+## 20220218
+1. - Time: 11:00
+   - Duration: 75 min
+   - Create Add Customer
+![](https://raw.githubusercontent.com/IN2018-2022-15/Img-Host/main/Xd/Add%20Customer.png)
+2. - Time: 13:00
+   - Duration: 45 min
+   - Create Modify Customer page
+![](https://raw.githubusercontent.com/IN2018-2022-15/Img-Host/main/Xd/Modify%20Customer.png)
+
+## 20220219
+1. - Time: 09:30
+   - Duration: 60 min
+   - Create Search job page
+![](https://raw.githubusercontent.com/IN2018-2022-15/Img-Host/main/Xd/Search%20Booking.png)
+2. - Time: 10:30
+   - Duration: 45 min
+   - Create Search customer page
+![](https://raw.githubusercontent.com/IN2018-2022-15/Img-Host/main/Xd/Search%20Customer.png)
+3. - Time: 15:00
+   - Duration: 60 min
+   - Create stock check page
+![](https://raw.githubusercontent.com/IN2018-2022-15/Img-Host/main/Xd/Modify%20Customer.png)
+
+## 20220220
+- break day
+
+## 20220221
+1. - Time: 16:30
+   - Duration: 60 min
+   - Create order page
+![](https://raw.githubusercontent.com/IN2018-2022-15/Img-Host/main/Xd/Order.png)
+2. - Time: 20:00
+   - Duration: 60 min
+   - Create invoice page
+![](https://raw.githubusercontent.com/IN2018-2022-15/Img-Host/main/Xd/Inovice.png)
+
+## 20220222
+- Time: 16:30
+- Duration: 150 min
+- Create Stock MOT and payment reminder page
+![](https://raw.githubusercontent.com/IN2018-2022-15/Img-Host/main/Xd/Stock%20Reminder.png)
+![](https://raw.githubusercontent.com/IN2018-2022-15/Img-Host/main/Xd/Payment%20Reminder.png)
+![](https://raw.githubusercontent.com/IN2018-2022-15/Img-Host/main/Xd/MOT%20Reminder%20PDF.png)
+
+## 20220223
+1. - Time: 16:00
+   - Duration: 30 min
+   - Team member meeting
+2. - Time: 16:30
+   - Duration: 10 min
+   - Update Meeting Record
+3. - Time: 16:40
+   - Duration: 30 min
+   - Update the Project Binder 
+
+## 20220224
+1. - Time: 15:00
+   - Duration: 30 min
+   - Meeting wth Consultant
+2. - Time: 16:30
+   - Duration: 10 min
+   - Update Meeting Record
+
+## 20220225
+- Time: 14:00
+- Duration: 240 min
+- Create Efficiency Report List
+- Create Efficiency Report
+- Create Booking Report List
+- Create Book Report
+![](https://raw.githubusercontent.com/IN2018-2022-15/Img-Host/main/Xd/Efficiency%20Report%20List.png)
+![](https://raw.githubusercontent.com/IN2018-2022-15/Img-Host/main/Xd/Efficiency%20Report.png)
+![](https://raw.githubusercontent.com/IN2018-2022-15/Img-Host/main/Xd/Booking%20Report%20List.png)
+![](https://raw.githubusercontent.com/IN2018-2022-15/Img-Host/main/Xd/Booking%20Report.png)
+
+## 20220226
+- Time: 10:30
+- Duration: 240 min
+- Create Stock Report List
+- Create Stock Report
+- Create Invoice PDF
+- Create Order PDF
+![](https://raw.githubusercontent.com/IN2018-2022-15/Img-Host/main/Xd/Stock%20Report%20List.png)
+![](https://raw.githubusercontent.com/IN2018-2022-15/Img-Host/main/Xd/Stock%20Report.png)
+![](https://raw.githubusercontent.com/IN2018-2022-15/Img-Host/main/Xd/Order%20Req.png)
+![](https://raw.githubusercontent.com/IN2018-2022-15/Img-Host/main/Xd/Invoice%20PDF.png)
+
+## 20220227
+- break day
+
+## 20220228
+- Time: 18:00
+- Duration: 80 min
+- Update Genric pop up box
+![](https://raw.githubusercontent.com/IN2018-2022-15/Img-Host/main/Xd/Success%20Page.png)
+![](https://raw.githubusercontent.com/IN2018-2022-15/Img-Host/main/Xd/Fatal%20Confirm.png)
+![](https://raw.githubusercontent.com/IN2018-2022-15/Img-Host/main/Xd/Low%20Premission.png)
+
+## 20220301
+- Time: 19:00
+- Duration: 120 min
+- Finalize and refinement the GUI interface design
+
+## 20220302
+- Time: 14:00
+- Duration: 90 min
+- Create First delivery 
+
+## 20220303
+1. - Time: 13:30
+   - Duration: 60 min
+   - Meeting wth Consultant and Team member
+2. - Time: 14:30
+   - Duration: 10 min
+   - Update Meeting Record
+3. - Time: 14:40
+   - Duration: 45 min
+   - Update the first delivery 
+
+## 20220304
+1. - Time: 17:00
+   - Duration: 30 min
+   - Team member meeting
+2. - Time: 17:30
+   - Duration: 10 min
+   - Update Meeting Record
+3. - Time: 18:30
+   - Duration: 70 min
+   - Update the Project Binder 
+4. - Time: 20:00
+   - Duration: 120 min
+   - Update the first delivery 
+
+## 20220305
+1. - Time: 20:00
+   - Duration: 30 min
+   - Team member meeting
+2. - Time: 20:30
+   - Duration: 10 min
+   - Update Meeting Record
+3. - Time: 20:40
+   - Duration: 45 min
+   - Finalize the first delivery and out put to PDF.
+   - Submit it to moodle
+
+## 20220306
+- Reading week break
+
+## 20220307
+- Reading week break
+
+## 20220308
+- Reading week break
+
+## 20220309
+- Reading week break
+
+## 20220310
+
+## 20220311
+
+## 20220312
+
+## 20220313
+- Time: 20:40
+- Duration: 45 min
+- Finalize the Project Binder and out put to PDF.
+- Submit via email
