@@ -344,8 +344,12 @@
 - Break
 
 ## 20220311
+- Duration: 60 min
+- Work on Project Binder
 
 ## 20220312
+- Duration: 60 min
+- Work on Project Binder
 
 ## 20220313
 - Time: 20:40
@@ -840,10 +844,557 @@ public interface Job_dao extends JpaRepository<Job, Long>, JpaSpecificationExecu
 - Create Customer DAO
 - Create Customer Controller
 
+**Customer Pojo code**
+```Java
+package com.in2018.backend.pojo;
+
+import lombok.Getter;
+
+import javax.persistence.*;
+import java.time.LocalDate;
+
+@Entity
+@Table(name = "customer")
+public class Customer {
+
+    private static final long serialVersionUID = 1L;
+
+    @Id
+    @GeneratedValue
+    @Column(name = "id")
+    private Long id;
+
+    @Column(name = "name")
+    private String name;
+
+    @Column(name = "email")
+    private String email;
+
+    //Why phone is string?
+    @Column(name = "phone")
+    private String phone;
+
+    @Column(name = "address")
+    private String address;
+
+    @Column(name = "postal_code")
+    private String postalCode;
+    
+    @Column(name = "fax")
+    private String fax;
+
+    @Column(name = "date_of_birth")
+    private LocalDate dateOfBirth;
+
+    @Column(name = "date_of_registration")
+    private LocalDate dateOfRegistration;
+
+    //Discount is Double?
+    @Column(name = "discount")
+    private int discount;
+
+    @Column(name = "customerType") //Customer type is required in the specifications for managing customer payments
+    private String customerType;
+    
+    //Car id is not in the table customer, but in the table car has a foreign key to customer
+
+    @Column(name = "is_active")
+    private boolean isActive;
+
+    public Customer() {
+    }
+
+    public Customer(Long id, String name, String email, String phone, String address, String postalCode, String fax, LocalDate dateOfBirth, LocalDate dateOfRegistration, int discount ,boolean isActive, String customerType) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.phone = phone;
+        this.address = address;
+        this.postalCode = postalCode;
+        this.fax = fax;
+        this.dateOfBirth = dateOfBirth;
+        this.dateOfRegistration = dateOfRegistration;
+        this.discount = discount;
+        this.isActive = isActive;
+        this.customerType = customerType;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getPostalCode() {
+        return postalCode;
+    }
+
+    public void setPostalCode(String postalCode) {
+        this.postalCode = postalCode;
+    }
+
+    public String getFax() {
+        return fax;
+    }
+
+    public void setFax(String fax) {
+        this.fax = fax;
+    }
+
+    public LocalDate getDateOfBirth() {
+        return dateOfBirth;
+    }
+
+    public void setDateOfBirth(LocalDate dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
+    }
+
+    public LocalDate getDateOfRegistration() {
+        return dateOfRegistration;
+    }
+
+    public void setDateOfRegistration(LocalDate dateOfRegistration) {
+        this.dateOfRegistration = dateOfRegistration;
+    }
+
+    public int getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(int discount) {
+        this.discount = discount;
+    }
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean isActive) {
+        this.isActive = isActive;
+    }
+
+    public String getCustomerType() {
+        return customerType;
+    }
+
+    public void setCustomerType(String customerType) {
+        this.customerType = customerType;
+    }
+
+
+    @Override
+    public String toString() {
+        return "Customer{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", phone='" + phone + '\'' +
+                ", address='" + address + '\'' +
+                ", postalCode='" + postalCode + '\'' +
+                ", fax='" + fax + '\'' +
+                ", dateOfBirth='" + dateOfBirth + '\'' +
+                ", dateOfRegistration='" + dateOfRegistration + '\'' +
+                ", discount=" + discount +
+                ", isActive=" + isActive +
+                '}';
+    }
+
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
+    
+}
+```
+
+**Customer DAO**
+```Java
+package com.in2018.backend.dao;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
+import com.in2018.backend.pojo.Customer;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDate;
+import java.util.List;
+
+
+@Repository
+@Transactional
+public interface Customer_dao extends CrudRepository<Customer, Long>,JpaRepository<Customer, Long>, JpaSpecificationExecutor<Customer> {
+
+    @Query("select c from Customer c where c.id = ?1")
+    Customer findCustomerById(Long id);
+
+    @Query("select c from Customer c where c.email = ?1")
+    Customer findCustomerByEmail(String email);
+
+    @Query("select c from Customer c where c.phone = ?1")
+    Customer findCustomerByPhone(String phone);
+
+    @Query("select c from Customer c where c.name like %?1%")
+    List<Customer> findCustomerByName(String name);
+
+    @Query("select c from Customer c where c.postalCode = ?1")
+    List<Customer> findCustomerByPostalCode(String postalCode);
+
+    @Query("select c from Customer c where c.dateOfBirth = ?1")
+    List<Customer> findCustomerByDateOfBirth(LocalDate dateOfBirth);
+
+}
+
+```
+**Customer Controller**
+```Java
+package com.in2018.backend.controller;
+
+import com.in2018.backend.dao.Customer_dao;
+import com.in2018.backend.pojo.Customer;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.Optional;
+
+@RestController
+@RequestMapping("/customer")
+@CrossOrigin
+public class Customer_controller {
+    
+    @Autowired
+    Customer_dao customer_dao;
+    //Customer_service customer_service;
+
+    @RequestMapping("/all")
+    @ResponseBody
+    @Transactional(isolation = Isolation.SERIALIZABLE)
+    @PreAuthorize("hasAnyRole('ROLE_FRANCHISEE','ROLE_FOREPERSON','ROLE_DEV')")
+    public ResponseEntity<List<Customer>> getAllCustomers() {
+        List<Customer> customers = customer_dao.findAll();
+        return new ResponseEntity<List<Customer>>(customers, HttpStatus.OK);
+    }
+
+    @GetMapping (value = "/{id}")
+    @ResponseBody
+    @Transactional(isolation = Isolation.SERIALIZABLE)
+    @PreAuthorize("hasAnyRole('ROLE_FRANCHISEE','ROLE_RECEPTIONIST','ROLE_FOREPERSON','ROLE_DEV')")
+    public ResponseEntity<Customer> getCustomerById(@PathVariable("id") Long id) {
+        Optional<Customer> customer_optional = customer_dao.findById(id);
+        if (customer_optional.isPresent()) {
+            return new ResponseEntity<Customer>(customer_optional.get(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<Customer>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PostMapping
+    @ResponseBody
+    @Transactional(isolation = Isolation.SERIALIZABLE)
+    @PreAuthorize("hasAnyRole('ROLE_FRANCHISEE', 'ROLE_RECEPTIONIST','ROLE_FOREPERSON','ROLE_DEV')")
+    public ResponseEntity<Customer> createAndUpdateCustomer(@RequestBody Customer customer) {
+        //Retry
+        BeanUtils.copyProperties(customer, customer);
+        Optional<Customer> customer_optional = customer_dao.findById(customer.getId());
+        if (customer_optional.isPresent()) {
+            Customer customer_found = customer_optional.get();
+            customer_found.setName(customer.getName());
+            customer_found.setEmail(customer.getEmail());
+            customer_found.setPhone(customer.getPhone());
+            customer_found.setAddress(customer.getAddress());
+            customer_found.setPostalCode(customer.getPostalCode());
+            customer_found.setFax(customer.getFax());
+            customer_found.setDiscount(customer.getDiscount());
+            customer_found.setCustomerType(customer.getCustomerType());
+            customer_dao.save(customer_found);
+            return new ResponseEntity<Customer>(customer_found, HttpStatus.OK);
+
+        } else {
+            customer_dao.save(customer);
+            return new ResponseEntity<Customer>(customer, HttpStatus.CREATED);
+        }
+
+    }
+
+    @GetMapping("/delete/{id}")
+    @ResponseBody
+    @Transactional(isolation = Isolation.SERIALIZABLE)
+    @PreAuthorize("hasAnyRole('ROLE_FRANCHISEE','ROLE_FOREPERSON', 'ROLE_DEV')")
+    public ResponseEntity<Customer> deleteCustomer(@PathVariable("id") Long id) {
+        Optional<Customer> customer_optional = customer_dao.findById(id);
+        //find by email replaces find by id
+        if (customer_optional.isPresent()) {
+            Customer customer_found = customer_optional.get();
+            customer_dao.delete(customer_found);
+            return new ResponseEntity<Customer>(customer_found, HttpStatus.OK);
+            //return new ResponseEntity<Customer>(customer_optional.get(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<Customer>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+
+    @GetMapping("/search/name/{name}")
+    @ResponseBody
+    @Transactional(isolation = Isolation.SERIALIZABLE)
+    @PreAuthorize("hasAnyRole('ROLE_FRANCHISEE', 'ROLE_RECEPTIONIST','ROLE_FOREPERSON','ROLE_DEV')")
+    public ResponseEntity<List<Customer>> searchCustomerByName(@PathVariable("name") String name) {
+        System.out.println("searching by name"+name);
+        List<Customer> customer = customer_dao.findCustomerByName(name);
+        if (customer.isEmpty()) {
+            return new ResponseEntity<List<Customer>>(HttpStatus.NOT_FOUND);
+        }else{
+            return new ResponseEntity<List<Customer>>(customer, HttpStatus.OK);
+        }
+    }
+
+    @GetMapping("/search/postal/{postalCode}")
+    @ResponseBody
+    @Transactional(isolation = Isolation.SERIALIZABLE)
+    @PreAuthorize("hasAnyRole('ROLE_FRANCHISEE', 'ROLE_RECEPTIONIST','ROLE_FOREPERSON','ROLE_DEV')")
+    public ResponseEntity<List<Customer>> searchCustomerByPostalCode(@PathVariable("postalCode") String postalCode) {
+        List<Customer> customer = customer_dao.findCustomerByPostalCode(postalCode);
+        if (customer != null) {
+            return new ResponseEntity<List<Customer>>(customer, HttpStatus.OK);
+        }else{
+            return new ResponseEntity<List<Customer>>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/search/email/{email}")
+    @ResponseBody
+    @Transactional(isolation = Isolation.SERIALIZABLE)
+    @PreAuthorize("hasAnyRole('ROLE_FRANCHISEE', 'ROLE_RECEPTIONIST','ROLE_FOREPERSON','ROLE_DEV')")
+    public ResponseEntity<Customer> searchCustomerByEmail(@PathVariable("email") String email) {
+        Customer customer = customer_dao.findCustomerByEmail(email);
+        if (customer != null) {
+            return new ResponseEntity<Customer>(customer, HttpStatus.OK);
+        }else{
+            return new ResponseEntity<Customer>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/search/phone/{phone}")
+    @ResponseBody
+    @Transactional(isolation = Isolation.SERIALIZABLE)
+    @PreAuthorize("hasAnyRole('ROLE_FRANCHISEE', 'ROLE_RECEPTIONIST','ROLE_FOREPERSON','ROLE_DEV')")
+    public ResponseEntity<Customer> searchCustomerByPhone(@PathVariable("phone") String phone) {
+        Customer customer = customer_dao.findCustomerByPhone(phone);
+        if (customer != null) {
+            return new ResponseEntity<Customer>(customer, HttpStatus.OK);
+        }else{
+            return new ResponseEntity<Customer>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/search/dob/{dob}")
+    @ResponseBody
+    @Transactional(isolation = Isolation.SERIALIZABLE)
+    @PreAuthorize("hasAnyRole('ROLE_FRANCHISEE', 'ROLE_RECEPTIONIST','ROLE_FOREPERSON','ROLE_DEV')")
+    public ResponseEntity<List<Customer>> searchCustomerByDob(@PathVariable("dob") String dob) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate localDate = LocalDate.parse(dob, formatter);
+        List<Customer> customer = customer_dao.findCustomerByDateOfBirth(localDate);
+        if (customer != null) {
+            return new ResponseEntity<List<Customer>>(customer, HttpStatus.OK);
+        }else{
+            return new ResponseEntity<List<Customer>>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    
+}
+
+```
+
 ## 20220403
 - Time: 150 Min
 - Create Consumption POJO
 - Create Consumption DAO
+
+**Consumption POJO**
+```Java
+package com.in2018.backend.pojo;
+
+import javax.persistence.*;
+import java.time.LocalDate;
+
+@Entity
+@Table(name = "consumption")
+public class Consumption {
+    @Id
+    @GeneratedValue
+    @Column(name = "id")
+    private Long id;
+
+    @Column(name = "job_id")
+    private long jobId;
+
+    @Column(name = "description")
+    private String description;
+
+    @Column(name = "part_id")
+    private long partId;
+
+    @Column(name = "amount")
+    private int amount;
+
+    @Column(name = "price")
+    private double price;
+
+    @Column(name = "date")
+    private LocalDate date;
+
+    public Consumption() {
+    }
+
+    public Consumption(Long id, long jobId, String description, long partId, int amount, double price, LocalDate date) {
+        this.id = id;
+        this.jobId = jobId;
+        this.description = description;
+        this.partId = partId;
+        this.amount = amount;
+        this.price = price;
+        this.date = date;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public long getPartId() {
+        return partId;
+    }
+
+    public void setPartId(long partId) {
+        this.partId = partId;
+    }
+
+    public int getAmount() {
+        return amount;
+    }
+
+    public void setAmount(int amount) {
+        this.amount = amount;
+    }
+
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDate date) {
+        this.date = date;
+    }
+
+    public long getJobId() {
+        return jobId;
+    }
+
+    public void setJobId(long jobId) {
+        this.jobId = jobId;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+}
+
+```
+
+**Consumption DAO**
+```Java
+package com.in2018.backend.dao;
+
+import com.in2018.backend.pojo.Consumption;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+
+
+import java.time.LocalDate;
+import java.util.List;
+
+@Repository
+@Transactional
+public interface Consumption_dao extends CrudRepository<Consumption, Long>, JpaRepository<Consumption, Long>, JpaSpecificationExecutor<Consumption> {
+
+    @Query("select c from Consumption c where c.date between ?1 and ?2")
+    List<Consumption> findByTimePeriod(LocalDate start, LocalDate end);
+
+    @Query("select c from Consumption c where c.jobId = ?1")
+    List<Consumption> findByJobId(Long jobId);
+
+    @Query("select c from Consumption c where c.date between ?1 and ?2")
+    List<Consumption> getByMonth(LocalDate start, LocalDate end);
+
+    @Query("select c from Consumption c where c.date between ?1 and ?2 and c.partId = ?3")
+    List<Consumption> getByStockItemIdAndMonth(LocalDate start, LocalDate end, Long partId);
+}
+
+```
 
 ## 20220404
 - Time: 360 Min
@@ -858,6 +1409,933 @@ public interface Job_dao extends JpaRepository<Job, Long>, JpaSpecificationExecu
 - Create Part Order DAO
 - Create Part Order Controller
 
+**Report Pojo**
+```Java
+package com.in2018.backend.pojo;
+
+import javax.persistence.*;
+import java.time.LocalDate;
+
+@Entity
+@Table(name = "report")
+public class Report {
+    @Id
+    @GeneratedValue
+    @Column(name = "id")
+    private Long id;
+
+    @Column(name = "report_type")
+    private String reportType;
+
+    @Column(name = "id_in_type")
+    private Long idInType;
+
+    @Column(name = "url")
+    private String url;
+
+    @Column(name = "date")
+    private LocalDate date;
+
+
+    public Report() {
+    }
+
+    public Report(Long id, String reportType, Long idInType, String url, LocalDate date) {
+        this.id = id;
+        this.reportType = reportType;
+        this.idInType = idInType;
+        this.url = url;
+        this.date = date;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getReportType() {
+        return reportType;
+    }
+
+    public void setReportType(String reportType) {
+        this.reportType = reportType;
+    }
+
+    public Long getIdInType() {
+        return idInType;
+    }
+
+    public void setIdInType(Long idInType) {
+        this.idInType = idInType;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDate date) {
+        this.date = date;
+    }
+}
+
+```
+
+**Report DAO**
+```Java
+package com.in2018.backend.dao;
+
+import com.in2018.backend.pojo.Report;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+
+@Repository
+@Transactional
+public interface Report_dao extends CrudRepository<Report, Long>, JpaRepository<Report, Long>, JpaSpecificationExecutor<Report> {
+
+    @Query("select r from Report r where r.idInType = ?1 and r.reportType = 'Job'")
+    Report getByJobId(Long id);
+
+    @Query("select r from Report r where r.idInType = ?1 and r.reportType = 'Invoice'")
+    Report getByInvoiceId(Long id);
+
+    @Query("select r from Report r where r.idInType = ?1 and r.reportType = 'MOT'")
+    Report getMotByVehicleId(Long id);
+
+    @Query("select r from Report r where r.idInType = ?1 and r.reportType = 'PartsOrder'")
+    Report getByOrderId(Long id);
+
+    @Query("select r from Report r where r.idInType = ?1 and r.reportType = 'Stock'")
+    Report getByStockId(Long id);
+
+}
+//${consumption.price*consumption.amount}
+
+```
+
+**Report Controller**
+```Java
+package com.in2018.backend.controller;
+
+import com.in2018.backend.dao.*;
+import com.in2018.backend.pojo.*;
+import freemarker.template.Template;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
+import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
+import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
+import software.amazon.awssdk.core.sync.RequestBody;
+import software.amazon.awssdk.regions.Region;
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.PutObjectRequest;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
+import java.util.*;
+
+@RestController
+@CrossOrigin
+@RequestMapping("/report")
+public class Report_Controller {
+
+    @Autowired
+    FreeMarkerConfigurer freeMarkerConfigurer;
+
+    @Autowired
+    Report_dao report_dao;
+
+    @Autowired
+    Consumption_dao consumption_dao;
+
+    @Autowired
+    StockItem_dao stockItem_dao;
+
+    @Autowired
+    Customer_dao customer_dao;
+
+    @Autowired
+    Vehicle_dao vehicle_dao;
+
+    @Autowired
+    Job_dao job_dao;
+
+    @Autowired
+    Invoice_dao invoice_dao;
+
+    @Autowired
+    PartOrder_dao partOrder_dao;
+
+    @Autowired
+    User_dao user_dao;
+
+    AwsBasicCredentials awsCreds = AwsBasicCredentials.create(
+            "AKIAZABQAOBOHKQWUXKB",
+            "oh23oSKdlA8e+ObjnDykld6gEQznH0+eBtob18tw");
+
+    //.credentialsProvider(StaticCredentialsProvider.create(awsCreds))
+
+    //AWS s3 bucket name
+    String bucketName = "in2018";
+
+    //No Not Working refactor
+    @GetMapping("/job/{id}")
+    @ResponseBody
+    @Transactional(isolation = Isolation.SERIALIZABLE)
+    @PreAuthorize("hasAnyRole('ROLE_FRANCHISEE', 'ROLE_RECEPTIONIST', 'ROLE_FOREPERSON','ROLE_DEV')")
+    public ResponseEntity<String> getReportJob(@PathVariable("id") Long id) {
+        Optional<Job> jobOptional = job_dao.findById(id);
+        if (jobOptional.isPresent()) {
+            Job job = jobOptional.get();
+            Optional<Customer> customerOptional = customer_dao.findById(job.getCustomerId());
+            Optional<Vehicle> vehicleOptional = vehicle_dao.findById(job.getVehicleId());
+            if (customerOptional.isPresent() && vehicleOptional.isPresent()) {
+                Customer customer = customerOptional.get();
+                Vehicle vehicle = vehicleOptional.get();
+                List<Consumption> consumptionList = consumption_dao.findByJobId(job.getId());
+                Report report = report_dao.getByJobId(id);
+                if (report != null) {
+                    return new ResponseEntity<>(report.getUrl(), HttpStatus.OK);
+                } else {
+                    //https://nullbeans.com/spring-boot-freemarker-configuration-example/
+                    //Thanks for the help
+                    Map<String, Object> model = new HashMap<>();
+                    model.put("job", job);
+                    model.put("customer", customer);
+                    model.put("vehicle", vehicle);
+                    model.put("consumptionList", consumptionList);
+                    model.put("garageAddress", "Quick Fix Fitters,<br>19 High Street,<br>Ashford,<br>Kent, CT16 8YY");
+                    String fileName = "Job-Report-" + job.getId() + "-" + LocalDate.now() + ".html";
+                    File page = new File(fileName);
+                    String filePath = page.getAbsolutePath();
+                    try (Writer pageWriter = new OutputStreamWriter(new FileOutputStream(page), StandardCharsets.UTF_8)) {
+                        Template template = freeMarkerConfigurer.getConfiguration().getTemplate("job-report.ftl");
+                        template.process(model, pageWriter);
+
+
+                        S3Client s3Client = S3Client.builder().region(Region.EU_WEST_2).credentialsProvider(StaticCredentialsProvider.create(awsCreds)).build();
+
+                        PutObjectRequest request = PutObjectRequest.builder().bucket("in2018").key(fileName).acl("public-read").build();
+                        s3Client.putObject(request, RequestBody.fromFile(page));
+                        Report report_new = new Report(1L, "Job", job.getId(), "https://in2018.s3.eu-west-2.amazonaws.com/" + fileName, LocalDate.now());
+                        report_dao.save(report_new);
+                        return new ResponseEntity<>("https://in2018.s3.eu-west-2.amazonaws.com/" + fileName, HttpStatus.OK);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        return new ResponseEntity<>("Apache Freemarker or S3 Bucket error", HttpStatus.INTERNAL_SERVER_ERROR);
+                    }
+                }
+
+
+            } else {
+                return new ResponseEntity<String>("Customer or Vehicle is not found", HttpStatus.NOT_FOUND);
+            }
+
+        } else {
+            return new ResponseEntity<String>("Job is not found", HttpStatus.NOT_FOUND);
+        }
+
+    }
+
+    @GetMapping("/vehicle/{id}")
+    @ResponseBody
+    @Transactional(isolation = Isolation.SERIALIZABLE)
+    @PreAuthorize("hasAnyRole('ROLE_FRANCHISEE', 'ROLE_RECEPTIONIST', 'ROLE_FOREPERSON','ROLE_DEV')")
+    public ResponseEntity<String> getMoTReminder(@PathVariable("id") Long id) {
+        Optional<Vehicle> vehicleOptional = vehicle_dao.findById(id);
+        if (vehicleOptional.isPresent()) {
+            Vehicle vehicle = vehicleOptional.get();
+            Optional<Customer> customerOptional = customer_dao.findById(vehicle.getCustomerId());
+            if (customerOptional.isPresent()) {
+                Customer customer = customerOptional.get();
+                LocalDate motDate = vehicle.getMotDueDate();
+                if (ChronoUnit.DAYS.between(LocalDate.now(), motDate) <= 5) {
+                    Report report = report_dao.getMotByVehicleId(id);
+                    //Wont decide here new api for decision
+                    if (report != null) {
+                        return new ResponseEntity<>(report.getUrl(), HttpStatus.OK);
+                    } else {
+                        Map<String, Object> model = new HashMap<>();
+                        model.put("customer", customer);
+                        model.put("vehicle", vehicle);
+                        model.put("garageAddress", "Quick Fix Fitters,<br>19 High Street,<br>Ashford,<br>Kent, CT16 8YY");
+                        String fileName = "Mot-Reminder-" + vehicle.getId() + "-" + LocalDate.now() + ".html";
+                        File page = new File(fileName);
+                        String filePath = page.getAbsolutePath();
+
+                        try (Writer pageWriter = new OutputStreamWriter(new FileOutputStream(page), StandardCharsets.UTF_8)) {
+                            Template template = freeMarkerConfigurer.getConfiguration().getTemplate("mot-reminder.ftl");
+                            template.process(model, pageWriter);
+
+                            S3Client s3Client = S3Client.builder().region(Region.EU_WEST_2).credentialsProvider(StaticCredentialsProvider.create(awsCreds)).build();
+
+                            PutObjectRequest request = PutObjectRequest.builder().bucket("in2018").key(fileName).acl("public-read").build();
+                            s3Client.putObject(request, RequestBody.fromFile(page));
+                            Report report_new = new Report(1L, "MOT", vehicle.getId(), "https://in2018.s3.eu-west-2.amazonaws.com/" + fileName, LocalDate.now());
+                            report_dao.save(report_new);
+                            return new ResponseEntity<>("https://in2018.s3.eu-west-2.amazonaws.com/" + fileName, HttpStatus.OK);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            return new ResponseEntity<>("Error", HttpStatus.INTERNAL_SERVER_ERROR);
+                            //logger.error("File writing using the Freemarker template engine failed!", e);
+                        }
+                    }
+                } else {
+                    return new ResponseEntity<String>("Vehicle is not due for MOT", HttpStatus.NOT_FOUND);
+                }
+            } else {
+                return new ResponseEntity<String>("Customer is not found", HttpStatus.NOT_FOUND);
+            }
+
+        } else {
+            return new ResponseEntity<String>("Vehicle is not found", HttpStatus.NOT_FOUND);
+        }
+
+    }
+
+
+    @PostMapping("/invoice")
+    @ResponseBody
+    @Transactional(isolation = Isolation.SERIALIZABLE)
+    @PreAuthorize("hasAnyRole('ROLE_FRANCHISEE', 'ROLE_RECEPTIONIST', 'ROLE_FOREPERSON','ROLE_DEV')")
+    public ResponseEntity<String> getInvoice(@org.springframework.web.bind.annotation.RequestBody Invoice invoice) {
+        BeanUtils.copyProperties(invoice, invoice);
+        Optional<Job> jobOptional = job_dao.findById(invoice.getJobId());
+        Job job = jobOptional.get();
+        Optional<User> userOptional = user_dao.findById(job.getEngineerId());
+        User user = userOptional.get();
+        Optional<Vehicle> vehicleOptional = vehicle_dao.findById(job.getVehicleId());
+        Vehicle vehicle = vehicleOptional.get();
+        List<Consumption> consumptionOptionalList = consumption_dao.findByJobId(invoice.getJobId());
+        List<Consumption> consumptionList = consumptionOptionalList;
+        Optional<Customer> customerOptional = customer_dao.findById(job.getCustomerId());
+        Customer customer = customerOptional.get();
+        invoice_dao.save(invoice);
+        Report report = report_dao.getByInvoiceId(invoice.getId());
+        if (report != null) {
+            return new ResponseEntity<>(report.getUrl(), HttpStatus.OK);
+        }
+        else {
+            double total = 0.0;
+            for (Consumption consumption : consumptionList) {
+                total += consumption.getPrice() * consumption.getAmount();
+            }
+            Map<String, Object> model = new HashMap<>();
+            model.put("customer", customer);
+            model.put("vehicle", vehicle);
+            model.put("garageAddress", "Quick Fix Fitters,<br>19 High Street,<br>Ashford,<br>Kent, CT16 8YY");
+            model.put("job", job);
+            model.put("consumptionList", consumptionList);
+            model.put("invoice", invoice);
+            model.put("user", user);
+            model.put("total", total);
+
+            String fileName = "Invoice" + invoice.getId() + "-" + LocalDate.now() + ".html";
+            File page = new File(fileName);
+            String filePath = page.getAbsolutePath();
+
+            try (Writer pageWriter = new OutputStreamWriter(new FileOutputStream(page), StandardCharsets.UTF_8)) {
+                Template template = freeMarkerConfigurer.getConfiguration().getTemplate("invoice.ftl");
+                template.process(model, pageWriter);
+
+                S3Client s3Client = S3Client.builder().region(Region.EU_WEST_2).credentialsProvider(StaticCredentialsProvider.create(awsCreds)).build();
+
+                PutObjectRequest request = PutObjectRequest.builder().bucket("in2018").key(fileName).acl("public-read").build();
+                s3Client.putObject(request, RequestBody.fromFile(page));
+                Report report_new = new Report(1L, "Invoice", invoice.getId(), "https://in2018.s3.eu-west-2.amazonaws.com/" + fileName, LocalDate.now());
+                report_dao.save(report_new);
+                return new ResponseEntity<>("https://in2018.s3.eu-west-2.amazonaws.com/" + fileName, HttpStatus.OK);
+            } catch (Exception e) {
+                e.printStackTrace();
+                return new ResponseEntity<>("Error: FreeMarker or S3 bucket", HttpStatus.INTERNAL_SERVER_ERROR);
+                //logger.error("File writing using the Freemarker template engine failed!", e);
+            }
+        }
+    }
+
+
+    @GetMapping("/invoice/{id}")
+    @ResponseBody
+    @Transactional(isolation = Isolation.SERIALIZABLE)
+    @PreAuthorize("hasAnyRole('ROLE_FRANCHISEE', 'ROLE_RECEPTIONIST', 'ROLE_FOREPERSON','ROLE_DEV')")
+    public ResponseEntity<String> getInvoice(@PathVariable("id") Long id) {
+        Optional<Job> jobOptional = job_dao.findById(id);
+        Job job = jobOptional.get();
+        Optional<User> userOptional = user_dao.findById(job.getEngineerId());
+        User user = userOptional.get();
+        Optional<Vehicle> vehicleOptional = vehicle_dao.findById(job.getVehicleId());
+        Vehicle vehicle = vehicleOptional.get();
+        List<Consumption> consumptionOptionalList = consumption_dao.findByJobId(id);
+        List<Consumption> consumptionList = consumptionOptionalList;
+        Optional<Customer> customerOptional = customer_dao.findById(job.getCustomerId());
+        Customer customer = customerOptional.get();
+        Optional<Invoice> invoiceOptional = invoice_dao.findById(job.getInvoiceId());
+        Invoice invoice = invoiceOptional.get();
+        Report report = report_dao.getByInvoiceId(invoice.getId());
+        if (customer.getDiscount() == 1) {
+            Discount_Controller discount_controller = new Discount_Controller();
+            double extraDiscount = discount_controller.getDiscount(invoice.getPaymentAmount(), customer.getDiscount());
+            invoice.setDiscount(invoice.getDiscount()-extraDiscount);
+        }
+        if (report != null) {
+            return new ResponseEntity<>(report.getUrl(), HttpStatus.OK);
+        }
+        else {
+            double total = 0.0;
+            for (Consumption consumption : consumptionList) {
+                total += consumption.getPrice();
+            }
+            Map<String, Object> model = new HashMap<>();
+            model.put("customer", customer);
+            model.put("vehicle", vehicle);
+            model.put("garageAddress", "Quick Fix Fitters,<br>19 High Street,<br>Ashford,<br>Kent, CT16 8YY");
+            model.put("job", job);
+            model.put("consumptionList", consumptionList);
+            model.put("invoice", invoice);
+            model.put("user", user);
+            model.put("total", total);
+
+
+
+            String fileName = "Invoice" + invoice.getId() + "-" + LocalDate.now() + ".html";
+            File page = new File(fileName);
+            String filePath = page.getAbsolutePath();
+
+        try (Writer pageWriter = new OutputStreamWriter(new FileOutputStream(page), StandardCharsets.UTF_8)) {
+            Template template = freeMarkerConfigurer.getConfiguration().getTemplate("invoice.ftl");
+            template.process(model, pageWriter);
+
+            S3Client s3Client = S3Client.builder().region(Region.EU_WEST_2).credentialsProvider(StaticCredentialsProvider.create(awsCreds)).build();
+
+            PutObjectRequest request = PutObjectRequest.builder().bucket("in2018").key(fileName).acl("public-read").build();
+            s3Client.putObject(request, RequestBody.fromFile(page));
+            Report report_new = new Report(1L, "Invoice", invoice.getId(), "https://in2018.s3.eu-west-2.amazonaws.com/" + fileName, LocalDate.now());
+            report_dao.save(report_new);
+            return new ResponseEntity<>("https://in2018.s3.eu-west-2.amazonaws.com/" + fileName, HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>("Error: FreeMarker or S3 bucket", HttpStatus.INTERNAL_SERVER_ERROR);
+            //logger.error("File writing using the Freemarker template engine failed!", e);
+            }
+        }
+    }
+
+    @GetMapping("/order/{id}")
+    @ResponseBody
+    @Transactional(isolation = Isolation.SERIALIZABLE)
+    @PreAuthorize("hasAnyRole('ROLE_FRANCHISEE', 'ROLE_RECEPTIONIST', 'ROLE_FOREPERSON','ROLE_DEV')")
+    public ResponseEntity<String> getPartOrder(@PathVariable Long id) {
+        Optional<PartOrder> partOrderOptional = partOrder_dao.findById(id);
+        if (partOrderOptional.isPresent()) {
+            PartOrder partOrder = partOrderOptional.get();
+            Optional<StockItem> stockItemOptional = stockItem_dao.findById(partOrder.getPartId());
+            if (stockItemOptional.isPresent()) {
+                StockItem stockItem = stockItemOptional.get();
+                Report report = report_dao.getByOrderId(partOrder.getId());
+                if (report != null) {
+                    return new ResponseEntity<>(report.getUrl(), HttpStatus.OK);
+                } else {
+
+                    Map<String, Object> model = new HashMap<>();
+                    model.put("partorder", partOrder);
+                    model.put("garageAddress", "Quick Fix Fitters,<br>19 High Street,<br>Ashford,<br>Kent, CT16 8YY");
+                    model.put("part", stockItem);
+
+                    String fileName = "PartsOrder" + partOrder.getId() + "-" + LocalDate.now() + ".html";
+                    File page = new File(fileName);
+                    String filePath = page.getAbsolutePath();
+
+                    try (Writer pageWriter = new OutputStreamWriter(new FileOutputStream(page), StandardCharsets.UTF_8)) {
+                        Template template = freeMarkerConfigurer.getConfiguration().getTemplate("parts-order.ftl");
+                        template.process(model, pageWriter);
+
+                        S3Client s3Client = S3Client.builder().region(Region.EU_WEST_2).credentialsProvider(StaticCredentialsProvider.create(awsCreds)).build();
+                        PutObjectRequest request = PutObjectRequest.builder().bucket("in2018").key(fileName).acl("public-read").build();
+                        s3Client.putObject(request, RequestBody.fromFile(page));
+                        Report report_new = new Report(1L, "PartsOrder", partOrder.getId(), "https://in2018.s3.eu-west-2.amazonaws.com/" + fileName, LocalDate.now());
+                        report_dao.save(report_new);
+                        return new ResponseEntity<>("https://in2018.s3.eu-west-2.amazonaws.com/" + fileName, HttpStatus.OK);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        return new ResponseEntity<>("Error: FreeMarker or S3 bucket", HttpStatus.INTERNAL_SERVER_ERROR);
+                        //logger.error("File writing using the Freemarker template engine failed!", e);
+                    }
+                }
+
+            } else {
+                return new ResponseEntity<>("Error: StockItem not found", HttpStatus.NOT_FOUND);
+            }
+
+        } else {
+            return new ResponseEntity<>("Error: PartOrder not found", HttpStatus.NOT_FOUND);
+        }
+
+    }
+
+    @GetMapping("/stock/{month}")
+    @ResponseBody
+    @Transactional(isolation = Isolation.SERIALIZABLE)
+    @PreAuthorize("hasAnyRole('ROLE_FRANCHISEE', 'ROLE_RECEPTIONIST', 'ROLE_FOREPERSON','ROLE_DEV')")
+    public ResponseEntity<String> getStockReport(@PathVariable("month") String month) {
+        List<StockItem> stockItems = stockItem_dao.findAll();
+        List<StockReportDTO> DTOs = new ArrayList<>();
+        month = month + "01";
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+        LocalDate localDate = LocalDate.parse(month, formatter);
+        double initValue = 0;
+        double finalValue = 0;
+
+        for (StockItem stockItem : stockItems) {
+            int usedQuantity = 0;
+            int newQuantity = 0;
+            List<Consumption> consumptionList = consumption_dao.getByStockItemIdAndMonth(localDate, localDate.plusMonths(1), stockItem.getId());
+
+            if (consumptionList.isEmpty()  == false) {
+                for (Consumption consumption : consumptionList) {
+                    usedQuantity += consumption.getAmount();
+                }
+            }else{}
+
+            List<PartOrder> partOrders = partOrder_dao.findPartOrdersByTimeAndPartId(localDate, localDate.plusMonths(1), stockItem.getId());
+            if (partOrders.isEmpty() == false) {
+            for (PartOrder partOrder : partOrders) {
+                if (partOrder.getStatus().equals("Completed")) {
+                    newQuantity += partOrder.getPartAmount();
+                }
+            }
+            }else{}
+
+            String DTODescription = stockItem.getPartName();
+            Long DTOPartId = stockItem.getId();
+            String DTOMaker = stockItem.getManufacturer();
+            String DTOModel = stockItem.getVehicleType();
+            String DTOYear = stockItem.getYear();
+            double DTOPrice = stockItem.getPrice();
+            double DTONewStockPrice = stockItem.getStockLevel()*stockItem.getPrice();
+            int DTOInitStock = stockItem.getStockLevel() + usedQuantity;
+            double DTOInitStockPrice = DTOInitStock*stockItem.getPrice();
+            int DTONewStockLevel = DTOInitStock + newQuantity - usedQuantity;
+            StockReportDTO DTO = new StockReportDTO(DTODescription,DTOPartId, DTOMaker, DTOModel, DTOYear, DTOPrice,DTONewStockPrice,DTOInitStock,DTOInitStockPrice, stockItem.getStockLevel(), usedQuantity, newQuantity, stockItem.getLowStockLevel());
+            DTOs.add(DTO);
+            initValue += DTO.getInitPrice();
+            finalValue += DTO.getNewStockPrice();}
+
+        Map<String, Object> model = new HashMap<>();
+        model.put("DTOList", DTOs);
+        model.put("reportPeriod", month);
+        model.put("garageAddress", "Quick Fix Fitters,<br>19 High Street,<br>Ashford,<br>Kent, CT16 8YY");
+        model.put("reportDate", LocalDate.now());
+        model.put("totalInitialCost", initValue);
+        model.put("totalStockCost", finalValue);
+
+
+
+        String fileName = "Stock-Report-" + month + "-" + LocalDate.now() + ".html";
+        File page = new File(fileName);
+        String filePath = page.getAbsolutePath();
+
+        try (Writer pageWriter = new OutputStreamWriter(new FileOutputStream(page), StandardCharsets.UTF_8)) {
+            Template template = freeMarkerConfigurer.getConfiguration().getTemplate("stock-report.ftl");
+            template.process(model, pageWriter);
+
+            S3Client s3Client = S3Client.builder().region(Region.EU_WEST_2).credentialsProvider(StaticCredentialsProvider.create(awsCreds)).build();
+            PutObjectRequest request = PutObjectRequest.builder().bucket("in2018").key(fileName).acl("public-read").build();
+            s3Client.putObject(request, RequestBody.fromFile(page));
+            Report report_new = new Report(1L, "Stock", Long.parseLong(month), "https://in2018.s3.eu-west-2.amazonaws.com/" + fileName, LocalDate.now());
+            report_dao.save(report_new);
+            return new ResponseEntity<>("https://in2018.s3.eu-west-2.amazonaws.com/" + fileName, HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>("Error: FreeMarker or S3 bucket", HttpStatus.INTERNAL_SERVER_ERROR);
+            //logger.error("File writing using the Freemarker template engine failed!", e);
+        }
+
+        }
+
+
+
+    }
+```
+
+**Part Order Pojo**
+```Java
+package com.in2018.backend.pojo;
+
+import javax.persistence.*;
+import java.time.LocalDate;
+
+
+@Entity
+@Table(name = "Part_order")
+
+
+public class PartOrder {
+
+    private static final long serialVersionUID = 1L;
+
+    @Id
+    @GeneratedValue
+    @Column(name = "id")
+    private Long id;
+
+    @Column(name = "date")
+    private LocalDate date;
+
+    @Column(name = "company")
+    private String company;
+
+    @Column(name = "address")
+    private String address;
+
+    @Column(name = "tel")
+    private int tel;
+
+    @Column(name = "fax")
+    private int fax;
+
+    @Column(name = "total_price")
+    private float totalPrice;
+
+    @Column(name = "status")
+    private String status;
+
+    @Column(name = "part_id")
+    private Long partId;
+
+    @Column(name = "part_amount")
+    private int partAmount;
+
+    //DB not able to handle this
+    //need to store the list of partsid and amount in a list
+
+    public PartOrder() {
+    }
+
+    public PartOrder(Long id, LocalDate date, String company, String address, int tel, int fax, float totalPrice, Long partId, int partAmount) {
+        this.id = id;
+        this.date = date;
+        this.company = company;
+        this.address = address;
+        this.tel = tel;
+        this.fax = fax;
+        this.totalPrice = totalPrice;
+        this.partId = partId;
+        this.partAmount = partAmount;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDate date) {
+        this.date = date;
+    }
+
+    public String getCompany() {
+        return company;
+    }
+
+    public void setCompany(String company) {
+        this.company = company;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public int getTel() {
+        return tel;
+    }
+
+    public void setTel(int tel) {
+        this.tel = tel;
+    }
+
+    public int getFax() {
+        return fax;
+    }
+
+    public void setFax(int fax) {
+        this.fax = fax;
+    }
+
+    public float getTotalPrice() {
+        return totalPrice;
+    }
+
+    public void setTotalPrice(float totalPrice) {
+        this.totalPrice = totalPrice;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public Long getPartId() {
+        return partId;
+    }
+
+    public void setPartId(Long part_id) {
+        this.partId = part_id;
+    }
+
+    public int getPartAmount() {
+        return partAmount;
+    }
+
+    public void setPartAmount(int partAmount) {
+        this.partAmount = partAmount;
+    }
+
+
+    @Override
+    public String toString() {
+        return "PartOrder{" +
+                "id=" + id +
+                ", date=" + date +
+                ", company='" + company + '\'' +
+                ", address='" + address + '\'' +
+                ", tel=" + tel +
+                ", fax=" + fax +
+                ", totalPrice=" + totalPrice +
+                ", status='" + status + '\'' +
+                ", partId=" + partId +
+                ", partAmount=" + partAmount +
+                '}';
+    }
+}
+
+```
+
+**Part Order DAO**
+```Java
+package com.in2018.backend.dao;
+
+import com.in2018.backend.pojo.PartOrder;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDate;
+import java.util.List;
+
+@Repository
+@Transactional
+public interface PartOrder_dao extends JpaRepository<PartOrder, Long>, JpaSpecificationExecutor<PartOrder> {
+
+    @Query("select p from PartOrder p where p.id = ?1")
+    PartOrder findPartOrderById(Long id);
+
+    @Query("select p from PartOrder p where p.status = ?1")
+    List<PartOrder> findPartOrdersByStatus(String status);
+
+    @Query("select p from PartOrder p where p.partId = ?1")
+    List<PartOrder> findPartOrdersByPartId(Long partId);
+
+    @Query("select p from PartOrder p where p.date = ?1")
+    List<PartOrder> findPartOrdersByDate(LocalDate date);
+
+    @Query("select p from PartOrder p where p.date between ?1 and ?2 and p.partId = ?3")
+    List<PartOrder> findPartOrdersByTimeAndPartId(LocalDate start, LocalDate end, Long partId);
+
+
+}
+
+```
+
+**Part Order Controller**
+```Java
+package com.in2018.backend.controller;
+
+
+import com.in2018.backend.dao.PartOrder_dao;
+import com.in2018.backend.dao.StockItem_dao;
+import com.in2018.backend.pojo.PartOrder;
+import com.in2018.backend.pojo.StockItem;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
+
+@RestController
+@CrossOrigin
+@RequestMapping("/partOrder")
+public class PartOrder_controller {
+
+    @Autowired
+    PartOrder_dao partOrder_dao;
+
+    @Autowired
+    StockItem_dao stockItem_dao;
+
+    @RequestMapping("/all")
+    @ResponseBody
+    @Transactional(isolation = Isolation.SERIALIZABLE)
+    @PreAuthorize("hasAnyRole('ROLE_FRANCHISEE', 'ROLE_RECEPTIONIST', 'ROLE_FOREPERSON','ROLE_DEV')")
+    public ResponseEntity<List<PartOrder>> getAllPartOrders() {
+        List<PartOrder> partOrders = partOrder_dao.findAll();
+        return new ResponseEntity<List<PartOrder>>(partOrders, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/{id}")
+    @ResponseBody
+    @Transactional(isolation = Isolation.SERIALIZABLE)
+    @PreAuthorize("hasAnyRole('ROLE_FRANCHISEE', 'ROLE_RECEPTIONIST', 'ROLE_FOREPERSON','ROLE_DEV')")
+    public ResponseEntity<PartOrder> getPartOrderById(@PathVariable("id") Long id) {
+        Optional<PartOrder> partOrder_optional = partOrder_dao.findById(id);
+        if (partOrder_optional.isPresent()) {
+            return new ResponseEntity<PartOrder>(partOrder_optional.get(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<PartOrder>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    //Retry part order
+    @GetMapping(value = "/search/status/{status}")
+    @ResponseBody
+    @Transactional(isolation = Isolation.SERIALIZABLE)
+    @PreAuthorize("hasAnyRole('ROLE_FRANCHISEE', 'ROLE_RECEPTIONIST', 'ROLE_FOREPERSON','ROLE_DEV')")
+    public ResponseEntity<List<PartOrder>> getPartOrdersByStatus(@PathVariable("status") String status) {
+        List<PartOrder> partOrders = partOrder_dao.findPartOrdersByStatus(status);
+        if (partOrders.isEmpty()) {
+            return new ResponseEntity<List<PartOrder>>(HttpStatus.NOT_FOUND);
+        }
+        else {
+            return new ResponseEntity<List<PartOrder>>(partOrders, HttpStatus.OK);
+        }
+    }
+
+    @GetMapping(value = "/search/id/{partId}")
+    @ResponseBody
+    @Transactional(isolation = Isolation.SERIALIZABLE)
+    @PreAuthorize("hasAnyRole('ROLE_FRANCHISEE', 'ROLE_RECEPTIONIST', 'ROLE_FOREPERSON','ROLE_DEV')")
+    public ResponseEntity<List<PartOrder>> getPartOrdersByPartId(@PathVariable("partId") Long partId) {
+        List<PartOrder> partOrders = partOrder_dao.findPartOrdersByPartId(partId);
+        if (partOrders.isEmpty()) {
+            return new ResponseEntity<List<PartOrder>>(HttpStatus.NOT_FOUND);
+        }
+        else {
+            return new ResponseEntity<List<PartOrder>>(partOrders, HttpStatus.OK);
+        }
+    }
+
+    @GetMapping(value = "/search/date/{date}")
+    @ResponseBody
+    @Transactional(isolation = Isolation.SERIALIZABLE)
+    @PreAuthorize("hasAnyRole('ROLE_FRANCHISEE', 'ROLE_RECEPTIONIST', 'ROLE_FOREPERSON','ROLE_DEV')")
+    public ResponseEntity<List<PartOrder>> getPartOrdersByDate(@PathVariable("date") LocalDate date) {
+        List<PartOrder> partOrders = partOrder_dao.findPartOrdersByDate(date);
+        if (partOrders.isEmpty()) {
+            return new ResponseEntity<List<PartOrder>>(HttpStatus.NOT_FOUND);
+        }
+        else {
+            return new ResponseEntity<List<PartOrder>>(partOrders, HttpStatus.OK);
+        }
+    }
+
+    @PostMapping
+    @ResponseBody
+    @Transactional(isolation = Isolation.SERIALIZABLE)
+    @PreAuthorize("hasAnyRole('ROLE_FRANCHISEE', 'ROLE_RECEPTIONIST', 'ROLE_FOREPERSON','ROLE_DEV')")
+    public ResponseEntity<PartOrder> createAndUpdatePartOrder(@RequestBody PartOrder partOrder) {
+        BeanUtils.copyProperties(partOrder, partOrder);
+        Optional<PartOrder> partOrder_optional = partOrder_dao.findById(partOrder.getId());
+        if (partOrder_optional.isPresent()) {
+            PartOrder partOrder_found = partOrder_optional.get();
+            partOrder_found.setAddress(partOrder.getAddress());
+            partOrder_found.setDate(partOrder.getDate());
+            partOrder_found.setCompany(partOrder.getCompany());
+            partOrder_found.setPartId(partOrder.getPartId());
+            partOrder_found.setPartAmount(partOrder.getPartAmount());
+            partOrder_found.setStatus(partOrder.getStatus());
+            partOrder_found.setFax(partOrder.getFax());
+            partOrder_found.setTel(partOrder.getTel());
+            partOrder_dao.save(partOrder_found);
+            if (partOrder.getStatus().equals("Compeleted")) {
+                Optional<StockItem> stockItem = stockItem_dao.findById(partOrder.getPartId());
+                if (stockItem.isPresent()) {
+                    StockItem stockItem_found = stockItem.get();
+                    stockItem_found.setStockLevel(stockItem_found.getStockLevel() + partOrder.getPartAmount());
+                    stockItem_dao.save(stockItem_found);
+                }
+
+            }
+            return new ResponseEntity<PartOrder>(partOrder_found, HttpStatus.OK);
+
+        } else {
+            partOrder_dao.save(partOrder);
+            if (partOrder.getStatus().equals("Compeleted")) {
+                Optional<StockItem> stockItem = stockItem_dao.findById(partOrder.getPartId());
+                if (stockItem.isPresent()) {
+                    StockItem stockItem_found = stockItem.get();
+                    stockItem_found.setStockLevel(stockItem_found.getStockLevel() + partOrder.getPartAmount());
+                    stockItem_dao.save(stockItem_found);
+                }
+
+            }
+            return new ResponseEntity<PartOrder>(partOrder, HttpStatus.CREATED);
+        }
+
+    }
+
+
+
+}
+
+```
+
 ## 20220406
 - Time: 240 Min
 - Debug Maksymilian Code
@@ -869,11 +2347,326 @@ public interface Job_dao extends JpaRepository<Job, Long>, JpaSpecificationExecu
 - Create Job Report Template
 - Create Stock report Template
 
+**MOT Reminder Template**
+```Html
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <title>MoT Reminder</title>
+
+	<style type="text/css">
+	   @page {
+            size: a4;
+            @top-center {
+                content: element(header);
+            }
+            @bottom-center {
+                content: element(footer);
+            }
+
+        }
+	</style>
+  </head>
+  <body class="m-5">
+	  <!-- <div class="row"><h1 class="font-weight-bold mb-3">MoT Reminder</h1></div> -->
+	  <div class="row">
+		  <div class="col-4" id="customer-address">${customer.address}</div>
+		  <div class="col-4"></div>
+		  <div class="col-4" id="company-address">${garageAddress}</div>
+	  </div>
+		  <div class="row"><div class="col-12"><p style="line-height: 300%">Dear ${customer.name} :</p></div></div>
+		  <div class="row"><div class="col-12"><h3 class="font-weight-bold text-center" style="line-height: 600%">REMINDER - MoT TEST DUE</h3></div></div>
+		  <div class="row">
+			<div class="col-6"><h5 class="font-weight-bold text-center">Vehicle Registration No: ${vehicle.regNumber}</h5></div>
+			<div class="col-6"><h5 class="font-weight-bold text-center">Renewal Test Date: ${vehicle.motDueDate}</h5></div>
+		  </div>
+	  <div class="row"><div class="col-12" align="center" style="line-height: 200%">
+		  <br>
+		  <p>According to our records, the above vehicle is due to have its MoT certificate renewed on the date shown.</p>
+		  <p>Account Holders customers such as yourself are assured of our prompt attention, and we hope that you will use our services on this occasion in order to have the necessary test carried out on your vehicle.</p>
+		  </div>
+	  </div>
+	  <hr style="border: 1px solid #000000" noshade>
+	  <div style="line-height: 200%">
+		  <p>Yours Sincerely,</p>
+		  <p>G. Lancaster</p>
+	  </div>
+	  <hr style="border: 1px solid #000000" noshade>
+  </body>
+</html>
+
+```
+**Job Report Template**
+```Html
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <title>Job ${job.id} Report</title>
+	  <style type="text/css">
+	   @page {
+            size: a4;
+            @top-center {
+                content: element(header);
+            }
+            @bottom-center {
+                content: element(footer);
+            }
+
+        }
+	  </style>
+  </head>
+  <body class="m-5">
+    <div class="row">
+	  <div class="col-3"><p>${garageAddress}</p></div>
+	  <div class="col-3"></div>
+	  <div class="col-3"></div>
+	  <div class="col-3"></div>
+	  </div>
+	  <div class="row"><div class="col-12"><h1 align="center" style="line-height: 400%"><u>Job ${job.id} Report</u></h1></div></div>
+	  <div class="row">
+	  <div class="col-6"><p>Vehicle Registration: ${vehicle.regNumber}</p></div>
+	  <div class="col-6"><p>Date Booked In: ${job.dateBookedIn}</p></div>
+	  </div>
+	  <div class="row">
+		  <div class="col-6"><p>Make: ${vehicle.make}</p></div>
+	  <div class="col-6"><p>Model: ${vehicle.model}</p></div>
+	  </div>
+	  <div class="row">
+	  <div class="col-6"><p>Customer Name: ${customer.name}</p></div>
+	  <div class="col-6"><p>Tel: ${customer.phone}</p></div>
+	  </div>
+	  <hr style="border: 1px solid #000000" noshade>
+	  <h4><u>Description of work required:</u></h4>
+	  <div class="row">
+	  <div class="col-12">${job.workRequiredDescription}</div>
+		  <!-- plain HTML Required in DB -->
+  </div>
+  <div class="row"><div class="col-12"><h6 align="center">Estimated Time: ${job.estimatedTime} hours</h6></div></div>
+	  <hr style="border: 1px solid #000000" noshade>
+	  <h4><u>Description of work carried out:</u></h4>
+  <div class="row">
+	  <div class="col-12"></div>
+		  <!-- plain HTML Required in DB -->
+		  </div>
+	  <div class="row"><div class="col-12"><h6 align="center">Actual Time: ${job.actualTime} hours</h6></div></div>
+	  <hr style="border: 1px solid #000000" noshade>
+	  <h4><u>Spare parts used:</u></h4>
+	  <table class="table">
+	  <thead><th>Description</th><th>Part No</th><th>Qty</th></thead>
+		  <#list consumptionList as consumption>
+		  <tbody><td>${consumption.description}</td><td>${consumption.partId}</td><td>${consumption.amount}</td></tbody>
+			  </#list>
+	  </table>
+  <hr style="border: 1px solid #000000" noshade>
+  <p style="line-height: 600%"> Sign:</p>
+  <hr style="border: 1px solid #000000" noshade>
+  <p align="center">EOF At now</p>
+	  
+	  
+	  
+	  
+	  
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+  </body>
+</html>
+```
+
+**Stock Report Template**
+```Html
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <title>Invoice</title>
+
+	<style type="text/css">
+	   @page {
+            size: a4;
+            @top-center {
+                content: element(header);
+            }
+            @bottom-center {
+                content: element(footer);
+            }
+
+        }
+        table, th {
+            border: black 2px solid !important;
+        }
+	</style>
+  </head>
+    <body class="m-5">
+        <div class="row"><div class="col-4 mb-3" id="garage-address">${garageAddress}</div></div>
+        <div class="row"><div class="col-6"><p class="mb-3 font-weight-bold">Spare Parts / Stock Level Report</p></div></div>
+        <div class="row"><div class="col-6"><p class="mb-4">Report month: ${reportPeriod}</p></div></div>
+        <table class="table table-bordered text-center mb-5">
+            <thead>
+                <tr>
+                    <th scope="col">Part Name</th>
+                    <th scope="col">Code</th>
+                    <th scope="col">Manufacturer</th>
+                    <th scope="col">Vehicle Type</th>
+                    <th scope="col">Year(s)</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Initial Stock Level</th>
+                    <th scope="col">Initial Cost, £</th>
+                    <th scope="col">Used</th>
+                    <th scope="col">Delivery</th>
+                    <th scope="col">New Stock Level</th>
+                    <th scope="col">Stock Cost, £</th>
+                    <th scope="col">Low Stock Threshold</th>
+                </tr>
+            </thead>
+            <tbody>
+            <#list DTOList as StockReportDTO>
+                <tr>
+                    <td>${StockReportDTO.stockName}</td>
+                    <td>${StockReportDTO.stockCode}</td>
+                    <td>${StockReportDTO.vehicleMaker}</td>
+                    <td>${StockReportDTO.vehicleModel}</td>
+                    <td>${StockReportDTO.vehicleYear}</td>
+                    <td>${StockReportDTO.price}</td>
+                    <td>${StockReportDTO.initStock}</td>
+                    <td>${StockReportDTO.initPrice}</td>
+                    <td>${StockReportDTO.usedStock}</td>
+                    <td>${StockReportDTO.arriveStock}</td>
+                    <td>${StockReportDTO.newStock}</td>
+                    <td>${StockReportDTO.newStockPrice}</td>
+                    <td>${StockReportDTO.lowStock}</td>
+                </tr>
+            </#list>
+                <tr>
+                    <th colspan="7" class="text-left">Total</th>
+                    <th>${totalInitialCost}</th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th>${totalStockCost}</th>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="row"><div class="col-6"><p class="mb-4">Report Date: ${reportDate}</p></div></div>
+        <div class="row"><div class="col-6"><p class="mb-4">Senior Storekeeper:</p></div></div>
+        <div class="row"><div class="col-6"><p>Ms E. Kournikova</p></div></div>
+    </body>
+</html>
+
+```
+
 ## 20220408
 - Time: 300 Min
 - Create Discount Controller
-- Connect with Amazon S3
+- Connect with Amazon S3 in Report Controller
 - Create data base backup function 
+
+**Discount Controller**
+```Java
+package com.in2018.backend.controller;
+
+public class Discount_Controller {
+    public double getDiscount(double price, int discountPlan) {
+        if (discountPlan == 1) {
+            if (price >= 5001) {
+                return 97;
+            } else {
+                if (price < 5001 && price >= 1001) {
+                    return 98;
+                } else {
+                    if (price < 1001 ) {
+                        return 99;
+                    } else {
+                        return 100;
+                    }
+                }
+            }
+        } else {
+            return 100;
+        }
+    }
+}
+
+```
+
+**DB Backup**
+```Java
+package com.in2018.backend.controller;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.*;
+import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
+import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
+import software.amazon.awssdk.regions.Region;
+import software.amazon.awssdk.services.rds.RdsClient;
+import software.amazon.awssdk.services.rds.model.CreateDbSnapshotRequest;
+import software.amazon.awssdk.services.rds.model.CreateDbSnapshotResponse;
+import software.amazon.awssdk.services.rds.model.RdsException;
+
+import java.time.LocalDateTime;
+
+@RestController
+@CrossOrigin
+@RequestMapping("/generic")
+public class Generic_Controller {
+
+    AwsBasicCredentials awsCreds = AwsBasicCredentials.create(
+            "AKIAZABQAOBOHKQWUXKB",
+            "oh23oSKdlA8e+ObjnDykld6gEQznH0+eBtob18tw");
+
+    @RequestMapping("/backup/{id}")
+    @ResponseBody
+    @Transactional(isolation = Isolation.SERIALIZABLE)
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_DEV')")
+    public ResponseEntity<String> backup(@PathVariable("id") String id) {
+        String dbInstanceIdentifier = "test";
+        String dbSnapshotIdentifier = id+ LocalDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+
+        Region region = Region.EU_WEST_2;
+        RdsClient rdsClient = RdsClient.builder()
+                .region(region).credentialsProvider(StaticCredentialsProvider.create(awsCreds))
+                .build();
+
+        try {
+            System.out.println("Creating snapshot " + dbSnapshotIdentifier + " for " + dbInstanceIdentifier);
+            CreateDbSnapshotRequest snapshotRequest = CreateDbSnapshotRequest.builder()
+                    .dbInstanceIdentifier(dbInstanceIdentifier)
+                    .dbSnapshotIdentifier(dbSnapshotIdentifier)
+                    .build();
+
+            CreateDbSnapshotResponse response = rdsClient.createDBSnapshot(snapshotRequest);
+            System.out.print("The Snapshot id is " + response.dbSnapshot().dbiResourceId());
+            return ResponseEntity.ok("The Snapshot id is " + response.dbSnapshot().dbiResourceId());
+
+        } catch (RdsException e) {
+            System.out.println(e.getLocalizedMessage());
+            return ResponseEntity.badRequest().body(e.getLocalizedMessage());
+            //Powered by AWS.
+            //https://github.com/awsdocs/aws-doc-sdk-examples/blob/main/javav2/example_code/rds/src/main/java/com/example/rds/CreateDBSnapshot.java
+        }
+    }
+}
+```
+
 
 ## 20220409
 - Break
@@ -881,7 +2674,7 @@ public interface Job_dao extends JpaRepository<Job, Long>, JpaSpecificationExecu
 ## 20220410
 - Time: 420 Min
 - Debug Extend and Modify Maksymilian code
-- Serializable all function
+- Serializable all function in Controllers
 
 ## 20220411
 - Time: 20 Hour
